@@ -33,6 +33,15 @@ public class UserCtrl extends HttpServlet {
         }
     }
     
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        
+        if ("logout".equals(action)) {
+            logoutUser(request, response);
+        }
+    }
+    
     private void registerUser(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -44,7 +53,7 @@ public class UserCtrl extends HttpServlet {
         
         if (userDAO.isEmailExists(email)) {
             request.setAttribute("errorMessage", "Email already exists!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
             return;
         }
         
@@ -58,10 +67,10 @@ public class UserCtrl extends HttpServlet {
         
         if (userDAO.registerUser(user)) {
             request.setAttribute("successMessage", "Registration successful! Please login.");
-            response.sendRedirect("login.jsp");
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp");
         } else {
             request.setAttribute("errorMessage", "Registration failed!");
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/register.jsp").forward(request, response);
         }
     }
     
@@ -80,21 +89,23 @@ public class UserCtrl extends HttpServlet {
             session.setAttribute("userRole", user.getRole());
             
             if ("admin".equals(user.getRole())) {
-                response.sendRedirect("admin/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
             } else {
-                response.sendRedirect("user/dashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
             }
         } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/auth/login.jsp").forward(request, response);
         }
     }
     
     private void logoutUser(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession();
-        session.invalidate();
-        response.sendRedirect("index.jsp");
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
 }

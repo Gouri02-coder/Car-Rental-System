@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Booking;
+import util.DatabaseConnection;
 
 public class BookingDAO {
     

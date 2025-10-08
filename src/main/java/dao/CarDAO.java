@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Car;
+import util.DatabaseConnection;
 
 public class CarDAO {
     
