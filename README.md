@@ -11,7 +11,7 @@ It allows users to rent cars online and enables admins to manage vehicles, users
 - **Backend:** Java Servlets, JDBC, JavaBeans  
 - **Database:** MySQL  
 - **Server:** Apache Tomcat  
-- **IDE:** Eclipse / NetBeans  
+- **IDE:** Eclipse 
 - **Build Tool:** Maven (optional)
 
 ---
