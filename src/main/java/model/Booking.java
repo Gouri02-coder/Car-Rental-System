@@ -13,7 +13,7 @@ public class Booking {
     private String status;
     private Timestamp createdAt;
     
-    // Additional fields for display (not in database)
+    // Additional display fields
     private String userName;
     private String carBrand;
     private String carModel;
@@ -21,13 +21,13 @@ public class Booking {
     // Constructors
     public Booking() {}
     
-    public Booking(int userId, int carId, Date startDate, Date endDate, double totalPrice) {
+    public Booking(int userId, int carId, Date startDate, Date endDate, double totalPrice, String status) {
         this.userId = userId;
         this.carId = carId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPrice = totalPrice;
-        this.status = "pending";
+        this.status = status;
     }
     
     // Getters and Setters
@@ -63,4 +63,29 @@ public class Booking {
     
     public String getCarModel() { return carModel; }
     public void setCarModel(String carModel) { this.carModel = carModel; }
+    
+    // Helper methods for JSP compatibility
+    public String getBookingDate() {
+        return createdAt != null ? createdAt.toString() : "";
+    }
+    
+    public String getPickupDate() {
+        return startDate != null ? startDate.toString() : "";
+    }
+    
+    public String getReturnDate() {
+        return endDate != null ? endDate.toString() : "";
+    }
+    
+    public double getTotalAmount() {
+        return totalPrice;
+    }
+    
+    public int getRentalDays() {
+        if (startDate != null && endDate != null) {
+            long diff = endDate.getTime() - startDate.getTime();
+            return (int) (diff / (1000 * 60 * 60 * 24));
+        }
+        return 0;
+    }
 }

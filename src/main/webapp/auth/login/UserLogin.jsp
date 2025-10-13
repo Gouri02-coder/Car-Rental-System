@@ -1,4 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="model.User" %>
+<%
+    // Check if user is already logged in
+    User user = (User) session.getAttribute("user");
+    if (user != null) {
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        return;
+    }
+    
+    // Get success message from URL parameter
+    String successMessage = request.getParameter("success");
+    if (successMessage != null) {
+        successMessage = URLDecoder.decode(successMessage, "UTF-8");
+    }
+    
+    // Get redirect parameters for booking
+    String redirect = request.getParameter("redirect");
+    String carId = request.getParameter("carId");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,7 +69,6 @@
                             <!-- Display error messages -->
                             <% 
                                 String errorMessage = (String) request.getAttribute("errorMessage");
-                                String successMessage = (String) request.getAttribute("successMessage");
                             %>
                             
                             <% if (errorMessage != null) { %>
@@ -70,6 +89,10 @@
 
                             <form action="${pageContext.request.contextPath}/UserCtrl" method="POST">
                                 <input type="hidden" name="action" value="login">
+                                <% if (redirect != null && carId != null) { %>
+                                    <input type="hidden" name="redirect" value="<%= redirect %>">
+                                    <input type="hidden" name="carId" value="<%= carId %>">
+                                <% } %>
                                 
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email Address</label>

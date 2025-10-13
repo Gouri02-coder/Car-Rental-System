@@ -31,6 +31,10 @@ public class UserCtrl extends HttpServlet {
             loginUser(request, response);
         } else if ("logout".equals(action)) {
             logoutUser(request, response);
+        } else if ("updateProfile".equals(action)) {
+            updateProfile(request, response);
+        } else if ("changePassword".equals(action)) {
+            changePassword(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action: " + action);
         }
@@ -120,8 +124,10 @@ public class UserCtrl extends HttpServlet {
             user.setRole("customer");
             
             if (userDAO.registerUser(user)) {
-                request.setAttribute("successMessage", "Registration successful! Please login.");
-                request.getRequestDispatcher("/auth/login/UserLogin.jsp").forward(request, response);
+                // Redirect to login page with success message as parameter
+                String successMessage = "Registration successful! Please login.";
+                response.sendRedirect(request.getContextPath() + "/auth/login/UserLogin.jsp?success=" + 
+                                    java.net.URLEncoder.encode(successMessage, "UTF-8"));
             } else {
                 request.setAttribute("errorMessage", "Registration failed! Please try again.");
                 request.setAttribute("firstName", firstName);
@@ -152,15 +158,115 @@ public class UserCtrl extends HttpServlet {
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("userRole", user.getRole());
+            session.setAttribute("userEmail", user.getEmail()); // For backward compatibility
             
-            if ("admin".equals(user.getRole())) {
+            // Check if there's a redirect parameter for booking
+            String redirect = request.getParameter("redirect");
+            String carId = request.getParameter("carId");
+            
+            if ("booking".equals(redirect) && carId != null) {
+                // Redirect to booking page if user came from car rental
+                response.sendRedirect(request.getContextPath() + "/booking/BookCar.jsp?carId=" + carId);
+            } else if ("admin".equals(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
             } else {
-                response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+                // Redirect to landing page for regular users
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
             }
         } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
             request.getRequestDispatcher("/auth/login/UserLogin.jsp").forward(request, response);
+        }
+    }
+    
+    private void updateProfile(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login/UserLogin.jsp");
+            return;
+        }
+        
+        try {
+            String fullName = request.getParameter("fullName");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            
+            // Validate required fields
+            if (isEmpty(fullName) || isEmpty(phone) || isEmpty(address)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=All fields are required!");
+                return;
+            }
+            
+            // Update user object
+            user.setName(fullName);
+            user.setPhone(phone);
+            user.setAddress(address);
+            
+            if (userDAO.updateUserProfile(user)) {
+                // Update session
+                session.setAttribute("user", user);
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?success=Profile updated successfully!");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=Failed to update profile!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=System error: " + e.getMessage());
+        }
+    }
+    
+    private void changePassword(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/auth/login/UserLogin.jsp");
+            return;
+        }
+        
+        try {
+            String currentPassword = request.getParameter("currentPassword");
+            String newPassword = request.getParameter("newPassword");
+            String confirmPassword = request.getParameter("confirmPassword");
+            
+            // Validate required fields
+            if (isEmpty(currentPassword) || isEmpty(newPassword) || isEmpty(confirmPassword)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=All password fields are required!");
+                return;
+            }
+            
+            // Verify current password
+            if (!userDAO.verifyPassword(user.getEmail(), currentPassword)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=Current password is incorrect!");
+                return;
+            }
+            
+            // Check if new passwords match
+            if (!newPassword.equals(confirmPassword)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=New passwords do not match!");
+                return;
+            }
+            
+            // Check if new password is different from current password
+            if (currentPassword.equals(newPassword)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=New password must be different from current password!");
+                return;
+            }
+            
+            if (userDAO.updateUserPassword(user.getId(), newPassword)) {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?success=Password updated successfully!");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=Failed to update password!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/user/profile.jsp?error=System error: " + e.getMessage());
         }
     }
     
