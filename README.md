@@ -7,7 +7,7 @@ It allows users to rent cars online and enables admins to manage vehicles, users
 ---
 
 ## ⚙️ Technologies Used
-- **Frontend:** HTML, CSS,Bootstarp, JavaScript, JSP  
+- **Frontend:** JSP, BootStarp
 - **Backend:** Java Servlets, JDBC, JavaBeans  
 - **Database:** MySQL  
 - **Server:** Apache Tomcat  
