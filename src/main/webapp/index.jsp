@@ -203,7 +203,7 @@
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/UserCtrl?action=logout">
+                                <a class="dropdown-item text-danger" href="<%= request.getContextPath() %>/UserCtrl?action=logout">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </a>
                             </li>
@@ -238,7 +238,7 @@
             
             <!-- Search Bar -->
             <div class="search-container">
-                <form action="user/browse-cars.jsp" method="get" class="d-flex search-box">
+                <form action="user/car/browse-cars.jsp" method="get" class="d-flex search-box">
                     <input type="text" 
                            name="query" 
                            class="search-input" 
@@ -248,28 +248,6 @@
                         <i class="fas fa-search me-2"></i>Search Cars
                     </button>
                 </form>
-            </div>
-            
-            <!-- Additional options below search -->
-            <div class="mt-4">
-                <%
-                    if (user == null) {
-                %>
-                <a href="auth/register/UserRegistration.jsp" class="btn btn-outline-light btn-lg me-3">
-                    <i class="fas fa-user-plus me-2"></i>Register Now
-                </a>
-                <%
-                    } else {
-                %>
-                <a href="user/dashboard.jsp" class="btn btn-outline-light btn-lg me-3">
-                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                </a>
-                <%
-                    }
-                %>
-                <a href="#inventory" class="btn btn-primary btn-lg">
-                    <i class="fas fa-car me-2"></i>Browse All Cars
-                </a>
             </div>
         </div>
     </div>
@@ -282,15 +260,15 @@
         </div>
         
         <div class="row g-4">
-            <!-- Car 1 -->
+            <!-- Car 1 - Buggati Chiron -->
             <div class="col-md-4">
                 <div class="car-card">
                     <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80');"></div>
                     <div class="car-content">
-                        <h4>Toyota Corolla</h4>
-                        <p class="text-muted">Economy | 5 Seats | Automatic</p>
-                        <div class="car-price">$35<span>/day</span></div>
-                        <p>Perfect for city driving and fuel efficiency.</p>
+                        <h4>Buggati Chiron</h4>
+                        <p class="text-muted">HyperCar | 2 Seats | Automatic</p>
+                        <div class="car-price">10 lakhs<span>/day</span></div>
+                        <p>Perfect for hyper driving and fuel efficiency.</p>
                         <%
                             if (user != null) {
                         %>
@@ -306,14 +284,14 @@
                 </div>
             </div>
             
-            <!-- Car 2 -->
+            <!-- Car 2 - Honda CR-V -->
             <div class="col-md-4">
                 <div class="car-card">
                     <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80');"></div>
                     <div class="car-content">
                         <h4>Honda CR-V</h4>
                         <p class="text-muted">SUV | 5 Seats | Automatic</p>
-                        <div class="car-price">$55<span>/day</span></div>
+                        <div class="car-price">2000<span>/day</span></div>
                         <p>Spacious SUV perfect for family trips.</p>
                         <%
                             if (user != null) {
@@ -330,14 +308,14 @@
                 </div>
             </div>
             
-            <!-- Car 3 -->
+            <!-- Car 3 - Porsche Taycan -->
             <div class="col-md-4">
                 <div class="car-card">
                     <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80');"></div>
                     <div class="car-content">
-                        <h4>BMW 5 Series</h4>
+                        <h4>Porsche Taycan</h4>
                         <p class="text-muted">Luxury | 5 Seats | Automatic</p>
-                        <div class="car-price">$89<span>/day</span></div>
+                        <div class="car-price">3 lakhs<span>/day</span></div>
                         <p>Premium luxury sedan for business or pleasure.</p>
                         <%
                             if (user != null) {
@@ -347,6 +325,78 @@
                             } else {
                         %>
                         <a href="auth/login/UserLogin.jsp?redirect=booking&carId=3" class="rent-btn">Rent This Car</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car 4 - Ferrari SF 90 -->
+            <div class="col-md-4">
+                <div class="car-card">
+                    <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80');"></div>
+                    <div class="car-content">
+                        <h4>Ferrari SF 90</h4>
+                        <p class="text-muted">SuperCar | 2 Seats | Automatic</p>
+                        <div class="car-price">1.5 lakhs<span>/day</span></div>
+                        <p>Perfect for hyper driving and fuel efficiency.</p>
+                        <%
+                            if (user != null) {
+                        %>
+                        <a href="booking/BookCar.jsp?carId=4" class="rent-btn">Rent This Car</a>
+                        <%
+                            } else {
+                        %>
+                        <a href="auth/login/UserLogin.jsp?redirect=booking&carId=4" class="rent-btn">Rent This Car</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car 5 - BMW 5 Series -->
+            <div class="col-md-4">
+                <div class="car-card">
+                    <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80');"></div>
+                    <div class="car-content">
+                        <h4>BMW 5 Series</h4>
+                        <p class="text-muted">Luxury | 5 Seats | Automatic</p>
+                        <div class="car-price">50k<span>/day</span></div>
+                        <p>Luxury sedan with premium features.</p>
+                        <%
+                            if (user != null) {
+                        %>
+                        <a href="booking/BookCar.jsp?carId=5" class="rent-btn">Rent This Car</a>
+                        <%
+                            } else {
+                        %>
+                        <a href="auth/login/UserLogin.jsp?redirect=booking&carId=5" class="rent-btn">Rent This Car</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Car 6 - Ford Mustang -->
+            <div class="col-md-4">
+                <div class="car-card">
+                    <div class="car-img" style="background-image: url('https://images.unsplash.com/photo-1584345604376-a69e7d06163f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80');"></div>
+                    <div class="car-content">
+                        <h4>Ford Mustang</h4>
+                        <p class="text-muted">Sports | 4 Seats | Manual</p>
+                        <div class="car-price">45k<span>/day</span></div>
+                        <p>Classic sports car for enthusiasts.</p>
+                        <%
+                            if (user != null) {
+                        %>
+                        <a href="booking/BookCar.jsp?carId=6" class="rent-btn">Rent This Car</a>
+                        <%
+                            } else {
+                        %>
+                        <a href="auth/login/UserLogin.jsp?redirect=booking&carId=6" class="rent-btn">Rent This Car</a>
                         <%
                             }
                         %>
