@@ -47,7 +47,8 @@
                                 <p class="text-muted">Access the administration panel</p>
                             </div>
                             
-                            <form action="../../admin/dashboard.jsp" method="post">
+                            <!-- ONLY CHANGED THE FORM ACTION -->
+                            <form action="${pageContext.request.contextPath}/AdminLoginServlet" method="post">
                                 <div class="mb-3">
                                     <label for="adminUsername" class="form-label">Admin ID</label>
                                     <div class="input-group">
@@ -55,7 +56,7 @@
                                             <i class="fas fa-user-tie text-danger"></i>
                                         </span>
                                         <input type="text" class="form-control border-start-0" id="adminUsername" 
-                                               placeholder="Enter admin ID" required>
+                                               name="username" placeholder="Enter admin ID" required>
                                     </div>
                                 </div>
                                 
@@ -66,7 +67,7 @@
                                             <i class="fas fa-key text-danger"></i>
                                         </span>
                                         <input type="password" class="form-control border-start-0" id="adminPassword" 
-                                               placeholder="Enter admin password" required>
+                                               name="password" placeholder="Enter admin password" required>
                                         <button class="btn btn-outline-secondary" type="button" id="toggleAdminPassword">
                                             <i class="fas fa-eye"></i>
                                         </button>

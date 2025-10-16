@@ -35,7 +35,8 @@ public class BookingDAO {
     // Get all bookings for a specific user
     public List<Booking> getBookingsByUserId(int userId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.name as user_name, c.brand as car_brand, c.model as car_model " +
+        // FIXED: Use first_name and last_name instead of name
+        String sql = "SELECT b.*, u.first_name, u.last_name, c.brand as car_brand, c.model as car_model " +
                     "FROM bookings b " +
                     "JOIN users u ON b.user_id = u.id " +
                     "JOIN cars c ON b.car_id = c.id " +
@@ -61,7 +62,8 @@ public class BookingDAO {
     // Get all bookings (for admin)
     public List<Booking> getAllBookings() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.name as user_name, c.brand as car_brand, c.model as car_model " +
+        // FIXED: Use first_name and last_name instead of name
+        String sql = "SELECT b.*, u.first_name, u.last_name, c.brand as car_brand, c.model as car_model " +
                     "FROM bookings b " +
                     "JOIN users u ON b.user_id = u.id " +
                     "JOIN cars c ON b.car_id = c.id " +
@@ -104,7 +106,8 @@ public class BookingDAO {
     // Get booking by ID
     public Booking getBookingById(int bookingId) {
         Booking booking = null;
-        String sql = "SELECT b.*, u.name as user_name, c.brand as car_brand, c.model as car_model " +
+        // FIXED: Use first_name and last_name instead of name
+        String sql = "SELECT b.*, u.first_name, u.last_name, c.brand as car_brand, c.model as car_model " +
                     "FROM bookings b " +
                     "JOIN users u ON b.user_id = u.id " +
                     "JOIN cars c ON b.car_id = c.id " +
@@ -272,7 +275,8 @@ public class BookingDAO {
     // Get bookings by status
     public List<Booking> getBookingsByStatus(String status) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.name as user_name, c.brand as car_brand, c.model as car_model " +
+        // FIXED: Use first_name and last_name instead of name
+        String sql = "SELECT b.*, u.first_name, u.last_name, c.brand as car_brand, c.model as car_model " +
                     "FROM bookings b " +
                     "JOIN users u ON b.user_id = u.id " +
                     "JOIN cars c ON b.car_id = c.id " +
@@ -298,7 +302,8 @@ public class BookingDAO {
     // Get today's active bookings
     public List<Booking> getTodaysActiveBookings() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT b.*, u.name as user_name, c.brand as car_brand, c.model as car_model " +
+        // FIXED: Use first_name and last_name instead of name
+        String sql = "SELECT b.*, u.first_name, u.last_name, c.brand as car_brand, c.model as car_model " +
                     "FROM bookings b " +
                     "JOIN users u ON b.user_id = u.id " +
                     "JOIN cars c ON b.car_id = c.id " +
@@ -385,7 +390,7 @@ public class BookingDAO {
         return stats;
     }
     
-    // Extract booking from ResultSet (helper method)
+    // Extract booking from ResultSet (helper method) - UPDATED
     private Booking extractBookingFromResultSet(ResultSet rs) throws SQLException {
         Booking booking = new Booking();
         booking.setId(rs.getInt("id"));
@@ -397,11 +402,20 @@ public class BookingDAO {
         booking.setStatus(rs.getString("status"));
         booking.setCreatedAt(rs.getTimestamp("created_at"));
         
-        // Additional display fields (might be null in some queries)
+        // FIXED: Combine first_name and last_name to create user_name
         try {
-            booking.setUserName(rs.getString("user_name"));
+            String firstName = rs.getString("first_name");
+            String lastName = rs.getString("last_name");
+            if (firstName != null && lastName != null) {
+                booking.setUserName(firstName + " " + lastName);
+            } else if (firstName != null) {
+                booking.setUserName(firstName);
+            } else {
+                booking.setUserName("User #" + booking.getUserId());
+            }
         } catch (SQLException e) {
             // Field doesn't exist in this query, ignore
+            booking.setUserName("User #" + booking.getUserId());
         }
         
         try {
