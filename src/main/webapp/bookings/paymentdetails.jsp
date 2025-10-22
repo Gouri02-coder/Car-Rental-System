@@ -214,7 +214,7 @@
 
                                 <!-- Payment Form -->
                                 <div class="col-md-7">
-                                    <h4 class="mb-4">Complete Your Booking</h4>
+                                    <h4 class="mb-4">Complete Your Bookings</h4>
                                     
                                     <form action="ProcessBookingServlet" method="post">
                                         <input type="hidden" name="carId" value="<%= carId %>">
