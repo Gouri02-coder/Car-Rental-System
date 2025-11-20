@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Car-Rental-System/src/main/java"/>
+	<classpathentry kind="lib" path="Car-Rental-System/src/main/webapp/WEB-INF/lib/mysql-connector-java-8.0.24.jar"/>
+	<classpathentry kind="output" path="Car-Rental-System/build/classes"/>
+</classpath>
